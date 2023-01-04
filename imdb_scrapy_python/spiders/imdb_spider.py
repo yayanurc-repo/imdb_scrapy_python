@@ -17,3 +17,8 @@ class ImdbSpider(scrapy.Spider):
                 'director': film.css('p.text-muted span.credit::text').get(),
                 'synopsis': film.css('p.text-muted span.plot::text').get(),
             }
+
+        # Follow pagination links
+        next_page = response.css('a.lister-page-next::attr(href)').get()
+        if next_page:
+            yield response.follow(next_page, callback=self.parse)
